@@ -1,0 +1,56 @@
+---
+layout: runbook
+title: '#4471 split · three problems, three tickets'
+owner: seweryn (support desk)
+status: open
+reviewed: 2026-10-28
+signature: v1.eyJzdWIiOiI3OTAiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzIxMzg5OSwiZXhwIjoxNzkzMzAwMjk5fQ.yBvCEUGT3U2EsH7TwaJz4tStJsuLOKjvNM-hgvbYAeQ
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const REPO = 'https://github.com/trzebiatowskiseweryn-hub/mega-s01e03-what-it-shows/issues';
+  const issues = { parser: `${REPO}/1`, hint: `${REPO}/2`, 'one-day': `${REPO}/3` };
+</script>
+
+[#4471](/kb/incidents/4471) says "known: one issue, one fix queued". Its own table says otherwise.
+It was merged on subject lines ([decision 0001](/kb/decisions/0001-dedupe-by-subject)), so three
+different bugs share one ticket. One fix will not close it.
+
+<Callout kind="warn">
+#4471 is not one issue. Each problem below has its own ticket, with the reports it covers.
+</Callout>
+
+## The problems in #4471
+
+<ProblemTable ticket={4471} {issues} />
+
+- **`parser`** — the shared date parser reads every date month first. All our tenants write the day
+  first, so bookings land with day and month swapped ("Booked for 2 March. The invite says 3 February").
+  Fix in the parser: read dates in the tenant's locale.
+- **`hint`** — booking-v3's form prints `MM/DD/YYYY` under its date field. Day-first tenants on
+  booking-v3 (alder.physio, copper.studio, pale.harbour) type what the hint says, and the form reads it
+  the tenant's way. A parser fix does not touch this: the hint text and form must follow the locale.
+- **`one-day`** — the date moves by one day, not by a swap: "Tuesday 12 May … Monday 11 May",
+  "Every booking in June is one day off", "Client in Lisbon got Tuesday. Client in Toronto got Monday."
+  That is a time zone or daylight-saving bug, not a date-order one. The desk had already noted these
+  reports (`desk-notes.json`); the #4471 table only footnotes them under `parser`.
+
+## How the counts were made
+
+- One id, one report: the export pages overlap, so repeated rows count once.
+- A report's problem comes from its tenant (locale and booking form) and its channel, as `causes.ts`
+  does. Intake's `intakeTag` is a guess from the reporter's browser and is not used.
+- Reports the desk noted as a one-day move are counted under `one-day`, not under the tenant's cause.
+- Every number on this page is computed from the export when the page is built (`#lib/kb/problems`).
+
+## What to change on the desk
+
+- Close #4471 as "split" and point it here; do not mark a big ticket "known" before its reports are read.
+- [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on subject alone. Subjects here cross
+  all three problems, so the next decision record should merge on cause, not on subject.
+
+<RenderStamp {signature} />
