@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 split · three problems, three tickets'
 owner: seweryn (support desk)
-status: open
+status: closed
 reviewed: 2026-10-28
 signature: v1.eyJzdWIiOiI3OTAiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzIxMzg5OSwiZXhwIjoxNzkzMzAwMjk5fQ.yBvCEUGT3U2EsH7TwaJz4tStJsuLOKjvNM-hgvbYAeQ
 ---
@@ -40,6 +40,15 @@ different bugs share one ticket. One fix will not close it.
   reports (`desk-notes.json`); the #4471 table only footnotes them under `parser`. They have their own
   ticket, and they stay counted under `parser` too, where the desk files them by tenant.
 
+## Outcome
+
+Engineering closed #4471 on 5 October.
+
+- **`parser`** — fixed: `fix(dates): parse dd/mm for eu locales`. Ticket closed as completed.
+- **`hint`** — won't fix: the booking-v3 form is retired. Ticket closed as not planned.
+- **`one-day`** — no fix of its own in the update. The desk files these reports under `parser`, so the
+  ticket is closed with #4471. If one-day moves keep coming after the parser fix, reopen it.
+
 ## How the counts were made
 
 - One id, one report: the export pages overlap, so repeated rows count once.
@@ -51,7 +60,7 @@ different bugs share one ticket. One fix will not close it.
 
 ## What to change on the desk
 
-- Close #4471 as "split" and point it here; do not mark a big ticket "known" before its reports are read.
+- Do not mark a big ticket "known" before its reports are read: #4471 held a fix and a won't-fix.
 - [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on subject alone. Subjects here cross
   all three problems, so the next decision record should merge on cause, not on subject.
 
