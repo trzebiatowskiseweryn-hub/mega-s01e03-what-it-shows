@@ -9,8 +9,9 @@
   let { ticket, issues }: { ticket: number; issues: Partial<Record<Problem, string>> } = $props();
 
   const raw = (reports as Report[]).length;
-  const unique = uniqueById(reports as Report[]).filter((r) => r.mergedInto === ticket).length;
-  const groups = splitTicket(reports as Report[], ticket, tenantOf, notes.oneDayMove);
+  const merged = uniqueById(reports as Report[]).filter((r) => r.mergedInto === ticket);
+  const unique = merged.length;
+  const groups = splitTicket(merged, tenantOf, notes.oneDayMove);
 </script>
 
 <p class="sum">
@@ -24,7 +25,7 @@
     {#each groups as g (g.problem)}
       <tr>
         <td><code>{g.problem}</code></td>
-        <td>{g.reports.length}</td>
+        <td>{g.reports}{#if g.alsoIn}<span class="also"> (also counted under <code>{g.alsoIn}</code>)</span>{/if}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
         <td>{#if issues[g.problem]}<a href={issues[g.problem]}>{issues[g.problem]?.split('/').slice(-3).join('/').replace('/issues/', '#')}</a>{:else}none yet{/if}</td>
@@ -35,4 +36,5 @@
 
 <style>
   .sum { font-size: 1.1rem; }
+  .also { color: var(--muted); font-size: 0.85em; }
 </style>

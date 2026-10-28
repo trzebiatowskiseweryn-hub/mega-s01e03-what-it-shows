@@ -37,14 +37,16 @@ different bugs share one ticket. One fix will not close it.
 - **`one-day`** — the date moves by one day, not by a swap: "Tuesday 12 May … Monday 11 May",
   "Every booking in June is one day off", "Client in Lisbon got Tuesday. Client in Toronto got Monday."
   That is a time zone or daylight-saving bug, not a date-order one. The desk had already noted these
-  reports (`desk-notes.json`); the #4471 table only footnotes them under `parser`.
+  reports (`desk-notes.json`); the #4471 table only footnotes them under `parser`. They have their own
+  ticket, and they stay counted under `parser` too, where the desk files them by tenant.
 
 ## How the counts were made
 
 - One id, one report: the export pages overlap, so repeated rows count once.
 - A report's problem comes from its tenant (locale and booking form) and its channel, as `causes.ts`
   does. Intake's `intakeTag` is a guess from the reporter's browser and is not used.
-- Reports the desk noted as a one-day move are counted under `one-day`, not under the tenant's cause.
+- Counts follow the desk's own view, as exported (the #4471 table): each report under its tenant's
+  cause. Reports the desk noted as a one-day move get their own row and ticket, and stay in `parser`.
 - Every number on this page is computed from the export when the page is built (`#lib/kb/problems`).
 
 ## What to change on the desk
